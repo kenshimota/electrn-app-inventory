@@ -24,7 +24,6 @@ const loadMethods = function (files) {
 
     const methods = Object.keys(methodsLoaded);
     console.log('Methods loaded ' + methods.length);
-    console.log(methods);
 
     return methods;
   } catch (error) {
@@ -48,6 +47,8 @@ const executeMethod = async function ({ name, params }) {
       await sleep(10);
       aux = nodes.front();
     }
+
+    console.log('Method executing...\n', { name: aux.name, params: aux.params }, '\n\n');
 
     const method = methodsLoaded[aux.name];
     if (!method) throw 'Disculpe el metodo no ha sido encontrado';
@@ -75,8 +76,8 @@ const executeMethod = async function ({ name, params }) {
 
 // respondiendo a la solicitud emitida
 ipcMain.on('asynchronous-execute-send', async (event, arg) => {
+  const { idp } = arg;
   try {
-    const { idp } = arg;
     const response = await executeMethod(arg)
       .then(t => t)
       .catch(error => {
