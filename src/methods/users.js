@@ -1,3 +1,5 @@
+'use strict'
+
 const UsersController = require('../controllers/UsersController.js');
 
 const users = {
@@ -6,7 +8,7 @@ const users = {
 		return await UsersController.index();
 	},
 
-	'create': async function (params) {
+	create: async function (params) {
 		return await UsersController.create(params);
 	},
 
