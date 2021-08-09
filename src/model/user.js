@@ -10,15 +10,29 @@ const User = sequelize.define("user", {
     name: {
         type: DataTypes.TEXT,
         allowNull: false,
-        validate: {
-            notEmpty: true
+        validate: {            
+            notNull: {
+                arg: true,
+                msg: "Debes ingresar tu nombre"
+            },
+            notEmpty: {
+                args: true,
+                msg: "Debes ingresar un nombre valido"
+            }
         }
     },
     lastname: {
         type: DataTypes.TEXT,
         allowNull: false,
         validate: {
-            notEmpty: true
+            notNull: {
+                arg: true,
+                msg: "Debes ingresar tu apellido"
+            },
+            notEmpty: {
+                args: true,
+                msg: "Debes ingresar un apellido valido"
+            }
         }
     },
     email: {
@@ -26,15 +40,28 @@ const User = sequelize.define("user", {
         allowNull:false,
         unique: true,
         validate: {
-            isEmail: true,
-            notEmpty: true
+            notNull: {
+                args: true,
+                msg: "Debe ingresar un correo electronico"
+            },
+            notEmpty: {
+                args: true,
+                msg: "Debe ingresar un correo valido"
+            },
+            isEmail: {
+                args: true,
+                msg: "El correo Ingresado no es valido"
+            }
         }
     },
     password: {
         type: DataTypes.TEXT,
         allowNull: false,
         validate: {
-            notEmpty: true
+            notEmpty: {
+                args: true,
+                msg: "Debe ingresar una contraseña"
+            }
         }
     },
 });
