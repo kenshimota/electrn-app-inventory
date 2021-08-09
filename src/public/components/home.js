@@ -8,25 +8,53 @@ let signinApp = Vue.component('home', {
     data: function() {
         return {
             personas: [],
+
             id: null,
             name: null,
-            sex: null,
+            lastname: null,
+            email: null,
+            password: null,
+
             alert: false,
             alert_message: "",
             dialog: null,
         }
     },
 
+    mounted: function () {
+      this.$nextTick(function () {
+          this.getPersonas();
+      });
+    },
+
+    watch: {
+      dialog: function() {
+          if(this.dialog == false)
+            this.getPersonas();
+      }
+    },
+
     methods: {
 
+      getPersonas: async function(){
+        this.personas = await execute('index',{});
+        console.log(this.personas);
+      },
 
-        createPersona: function() {
-            let new_persona = {id: this.id, name: this.name, sex: this.sex};
-            this.personas.push(new_persona);
-            this.dialog = null;
-            this.alert_message = "Persona agregada correctamente";
-            this.alert = true;
-        },
+      createPersona: async function() {
+          let new_persona = {
+            name: this.name,
+            lastname: this.lastname,
+            email: this.email,
+            password: this.password
+          };
+          
+          let result = await execute('create',new_persona);
+
+          console.log(result);
+          
+          this.dialog = false;
+      },
 
         openDialog: function() {
             this.dialog = true;
@@ -37,14 +65,16 @@ let signinApp = Vue.component('home', {
     <v-container>
     <v-simple-table
      fixed-header
-     height="500px"
+     height="300px"
+  
     >
          <template v-slot:default>
          <thead>
              <tr>
                  <th class="text-center">id</th>
                  <th class="text-center">Nombre</th>
-                 <th class="text-center">Sexo</th>
+                 <th class="text-center">Apellido</th>
+                 <th class="text-center">Email</th>
              </tr>
          </thead>
          <tbody>
@@ -52,9 +82,10 @@ let signinApp = Vue.component('home', {
              v-for="persona in personas"
              :key="persona.id"
              >
-             <td>{{ persona.id }}</td>
-             <td>{{ persona.name }}</td>
-             <td>{{ persona.sex }}</td>
+             <td>{{ persona.dataValues.id }}</td>
+             <td>{{ persona.dataValues.name }}</td>
+             <td>{{ persona.dataValues.lastname }}</td>
+             <td>{{ persona.dataValues.email }}</td>
              </tr>
          </tbody>
          </template>
@@ -74,16 +105,6 @@ let signinApp = Vue.component('home', {
        <v-container>
          <v-row>
 
-         <v-col
-         cols="6"
-       >
-         <v-text-field
-           label="id*"
-           required
-           v-model="id"
-         ></v-text-field>
-       </v-col>
-
            <v-col
              cols="6"
            >
@@ -97,11 +118,28 @@ let signinApp = Vue.component('home', {
            cols="6"
          >
            <v-text-field
-             label="Sexo*"
+             label="Apellido*"
              required
-             v-model="sex"
+             v-model="lastname"
            ></v-text-field>
          </v-col>
+
+         <v-col cols="6">
+          <v-text-field
+            label="Email*"
+            required
+            v-model="email"
+          ></v-text-field>
+        </v-col>
+
+        <v-col cols="6">
+        <v-text-field
+          label="Password*"
+          required
+          v-model="password"
+        ></v-text-field>
+      </v-col>
+
          </v-row>
        </v-container>
        <small>*indicates required field</small>
@@ -128,14 +166,19 @@ let signinApp = Vue.component('home', {
    </v-card>
  </v-dialog>
 </v-row> 
-     <v-btn
-     class="mt-7"
-       color="primary"
-       dark
-       @click="openDialog"
-     >
-       Crear Persona
-     </v-btn>
+<v-row>
+    <v-col cols="6">
+      <v-btn
+        style="margin-left:7em;"
+        class="mt-7"
+        color="primary"
+        dark
+        @click="openDialog"
+    > Crear Persona </v-btn>
+    </v-col>
+   
+</v-row>  
+
 
     <snackbar-alert
         :active="alert"
