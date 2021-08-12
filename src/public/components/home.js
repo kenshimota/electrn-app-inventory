@@ -1,22 +1,30 @@
 'use strict'
 
-import snackbarAlert from '../utils/snackbar-alert.js';
-
 // componente home
 let signinApp = Vue.component('home', {
 
     data: function() {
         return {
+
             personas: [],
+
+            headers: [
+              { text: 'Nombre', value: 'name' },
+              { text: 'Apellido', value: 'lastname' },
+              { text: 'Correo', value: 'email' }
+            ],
+
+            valid: true,
 
             id: null,
             name: null,
             lastname: null,
             email: null,
-            password: null,
 
-            alert: false,
-            alert_message: "",
+            nameRules: [ v => !!v || 'El nombre es requerido' ],
+            lastnameRules: [ v => !!v || 'El apellido es requerido' ],
+            emailRules: [ v => !!v || 'El correo es requerido' ],
+
             dialog: null,
         }
     },
@@ -37,59 +45,64 @@ let signinApp = Vue.component('home', {
     methods: {
 
       getPersonas: async function(){
-        this.personas = await execute('index',{});
-        console.log(this.personas);
+        this.personas = await execute('index-employees',{});
       },
 
       createPersona: async function() {
+
           let new_persona = {
             name: this.name,
             lastname: this.lastname,
             email: this.email,
-            password: this.password
           };
           
-          let result = await execute('create',new_persona);
+          let result = await execute('create-employee',new_persona);
+            
+          console.log(result.code);
 
-          console.log(result);
+          if( result.code == 1) {
+            alertApp({color:"success", text: result, icon: "success" });
+            this.dialog = false;
+
+          }else {
+            alertApp({color:"error", text: result, icon: "alert" });  
+          } 
           
-          this.dialog = false;
       },
 
         openDialog: function() {
+            this.name = null;
+            this.lastname = null;
+            this.email = null;
+            this.valid = true;
+
             this.dialog = true;
         }
     },
 
 	template: `
     <v-container>
-    <v-simple-table
-     fixed-header
-     height="300px"
-  
-    >
-         <template v-slot:default>
-         <thead>
-             <tr>
-                 <th class="text-center">id</th>
-                 <th class="text-center">Nombre</th>
-                 <th class="text-center">Apellido</th>
-                 <th class="text-center">Email</th>
-             </tr>
-         </thead>
-         <tbody>
-             <tr
-             v-for="persona in personas"
-             :key="persona.id"
-             >
-             <td>{{ persona.dataValues.id }}</td>
-             <td>{{ persona.dataValues.name }}</td>
-             <td>{{ persona.dataValues.lastname }}</td>
-             <td>{{ persona.dataValues.email }}</td>
-             </tr>
-         </tbody>
-         </template>
-     </v-simple-table>
+
+    <v-container>
+      <v-row>
+        <v-col align="right" cols="12">
+          <v-btn color="primary" text :icon="true" @click="openDialog"> <v-icon>mdi-plus</v-icon> </v-btn>
+          <v-btn color="warning" text :icon="true"> <v-icon>mdi-pencil</v-icon> </v-btn>
+          <v-btn color="error" text :icon="true"> <v-icon>mdi-delete</v-icon> </v-btn>
+        </v-col>
+
+      </v-row>
+    </v-container>
+
+
+    <v-data-table
+      :headers="headers"
+      :items="personas"
+      :single-select="true"
+      item-key="id"
+      :items-per-page="20"
+  ></v-data-table>
+
 
 <v-row justify="center">
  <v-dialog
@@ -102,53 +115,50 @@ let signinApp = Vue.component('home', {
        <span class="text-h5">Crear Persona</span>
      </v-card-title>
      <v-card-text>
-       <v-container>
-         <v-row>
+        <v-form v-model="valid">
+        <v-container>
+        <v-row>
 
-           <v-col
-             cols="6"
-           >
-             <v-text-field
-               label="Nombre*"
-               v-model="name"
-             ></v-text-field>
-           </v-col>
-           
-           <v-col
-           cols="6"
-         >
-           <v-text-field
-             label="Apellido*"
-             required
-             v-model="lastname"
-           ></v-text-field>
-         </v-col>
-
-         <v-col cols="6">
+          <v-col
+            cols="6"
+          >
+            <v-text-field
+              label="Nombre*"
+              v-model="name"
+              :rules="nameRules"
+            ></v-text-field>
+          </v-col>
+          
+          <v-col
+          cols="6"
+        >
           <v-text-field
-            label="Email*"
+            label="Apellido*"
             required
-            v-model="email"
+            v-model="lastname"
+            :rules="lastnameRules"
           ></v-text-field>
         </v-col>
 
         <v-col cols="6">
-        <v-text-field
-          label="Password*"
-          required
-          v-model="password"
-        ></v-text-field>
-      </v-col>
+         <v-text-field
+           label="Email*"
+           required
+           v-model="email"
+           :rules="emailRules"
+         ></v-text-field>
+       </v-col>
 
-         </v-row>
-       </v-container>
-       <small>*indicates required field</small>
+        </v-row>
+      </v-container>
+      <small>* Indica que campos son requeridos</small>
+        </v-form>
      </v-card-text>
      <v-card-actions>
        <v-spacer></v-spacer>
        <v-btn
+          text
          color="blue darken-1"
-         text
          @click="dialog = false"
        >
          Close
@@ -157,6 +167,7 @@ let signinApp = Vue.component('home', {
        <v-btn
          color="blue darken-1"
          text
+         :disabled="!valid"
          @click="createPersona"
        >
          Save
@@ -165,25 +176,7 @@ let signinApp = Vue.component('home', {
      </v-card-actions>
    </v-card>
  </v-dialog>
-</v-row> 
-<v-row>
-    <v-col cols="6">
-      <v-btn
-        style="margin-left:7em;"
-        class="mt-7"
-        color="primary"
-        dark
-        @click="openDialog"
-    > Crear Persona </v-btn>
-    </v-col>
-   
 </v-row>  
-
-
-    <snackbar-alert
-        :active="alert"
-        :text="alert_message"
-    />
  </v-container>
 
     `
