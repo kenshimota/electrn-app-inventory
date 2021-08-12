@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-
-
   <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
   <script src="./resources/javascript/vue-router.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
@@ -18,6 +16,16 @@
 <body>
   <div id="app">
     <v-app>
+
+      <!-- Alerta de la app -->
+      <snackbar-app
+        :color = "colorAlert"
+        :text = "textAlert"
+        :icon = "iconAlert"
+        :active = "alert"
+      ></snackbar-app>
+
+
       <v-main>
         <v-container>
           <router-view></router-view>
@@ -30,8 +38,14 @@
     const execute = require('../javascript/execute');
     window.execute = execute;
   </script>
-
- <script type="module" src="./main.js"></script>
+  <script type="module" src="./main.js"></script>
+  
+  <script>
+    // funcion que activa la alerta
+    function alertApp(params = {}){
+      appInstance.activeAlert(params);
+    }
+  </script>
 
 </body>
 </html>
