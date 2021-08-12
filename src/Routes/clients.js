@@ -1,29 +1,29 @@
 'use strict'
 
-const DepartmentsController = require('../controllers/DepartmentsController.js');
+const ClientsController = require('../controllers/ClientsController.js');
 
-const departament = {
+const clients = {
 
-	'index-departaments': async function() {
-		return await DepartmentsController.index();
+	'index-clients': async function() {
+		return await ClientsController.index();
 	},
 
-	'create-departament': async function (params) {
-		return await DepartmentsController.create(params);
+	'create-client': async function (params) {
+		return await ClientsController.create(params);
 	},
 
-	'show-departament': async function (params) {
-		return await DepartmentsController.show(params);
+	'show-client': async function (params) {
+		return await ClientsController.show(params);
 	},
 
-	'update-departament': async function (params) {
-		return await DepartmentsController.update(params);
+	'update-client': async function (params) {
+		return await ClientsController.update(params);
 	},
 
-	'destroy-departament': async function (params) {
-		return await DepartmentsController.destroy(params);
+	'destroy-client': async function (params) {
+		return await ClientsController.destroy(params);
 	},
 
 };
 
-module.exports = departament;
+module.exports = clients;
