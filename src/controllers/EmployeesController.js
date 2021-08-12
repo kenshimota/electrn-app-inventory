@@ -52,11 +52,9 @@ const EmployeesController = {
      */
     show: async function(id) {
         try {
-            const employee = await Employee.findByPk(id);
+            const employee = await Employee.findByPk(id, {raw: true});
 
-            if(employee === null) {
-                throw new Error("Este empleado no Existe");
-            }
+            if(employee === null) throw new Error("Este empleado no Existe");
 
             return employee;
 
@@ -65,8 +63,10 @@ const EmployeesController = {
         }
     },
     
+
+
     /**
-     * funcion que actuliza los datos de un empleado
+     * funcion que actualiza los datos de un empleado
      * 
      * @param {*} params 
      * @returns 
@@ -95,35 +95,38 @@ const EmployeesController = {
 
             employee.save();
 
-            return ["Actualizado correctamente", 1];
+            return { message: "Actualizado Correctamente", code: 1 };
 
         } catch (error) {
-            return [error.message, 0];
+            return { message: error.message, code: 0 };
         }
 
 
     },
     
+
+    /**
+     * funcion que elimina a un empleado
+     * 
+     * @param {*} params 
+     * @returns 
+     */
     destroy: async function destroy(id) {
         try {
             let employee = await employee.findByPk(id);
 
-            if(employee === null) {
-                throw new Error("El empleado no existe");
-            }
-
+            if(employee === null) throw new Error("El empleado no existe");
+            
             // elimino el empleado
             employee.destroy();
 
-        } catch (error) {
-            return [error.message, 0];
-        }
+            return { message: error.message, code: 1 };
 
+        } catch (error) {
+            return { message: error.message, code: 0 };
+        }
     }
 
 }
 
 module.exports = EmployeesController;
-
-
-
