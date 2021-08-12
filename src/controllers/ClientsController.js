@@ -83,9 +83,9 @@ let ClientsController = {
             if( empty(params.address) ) throw new Error("La direccion del cliente es obligatoria");
             if( empty(params.discovered) ) throw new Error("Por favor ingrese como el cliente se entero de la empresa");
 
-            let client = await Department.findByPk(params.id);
+            let client = await Client.findByPk(params.id);
             
-            if( client === null) throw new Error("El departamento no existe");
+            if( client === null) throw new Error("El cliente no existe");
 
             client.name = params.name;
             client.lastname = params.lastname;
@@ -114,9 +114,9 @@ let ClientsController = {
      */
     destroy: async function(params) {
         try {
-            let client = await Department.findByPk(params.id);
+            let client = await Client.findByPk(params.id);
 
-            if(client === null) throw new Error("Este departamento no existe");
+            if(client === null) throw new Error("Este cliente no existe");
 
             client.destroy();
 
