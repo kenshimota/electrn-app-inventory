@@ -16,6 +16,12 @@ let signinApp = Vue.component('home', {
 
             valid: true,
 
+            hidden:true,
+
+            search: null,
+            page: 1,
+            pageCount: 0,
+
             id: null,
             name: null,
             lastname: null,
@@ -83,25 +89,51 @@ let signinApp = Vue.component('home', {
 	template: `
     <v-container>
 
-    <v-container>
-      <v-row>
-        <v-col align="right" cols="12">
+
+    <v-card elevation="0">
+      <v-card-title>
+        <v-row>
+        <v-col cols="12">
           <v-btn color="primary" text :icon="true" @click="openDialog"> <v-icon>mdi-plus</v-icon> </v-btn>
           <v-btn color="warning" text :icon="true"> <v-icon>mdi-pencil</v-icon> </v-btn>
           <v-btn color="error" text :icon="true"> <v-icon>mdi-delete</v-icon> </v-btn>
+          <v-btn color="primary" text :icon="true" @click="hidden =!hidden"> <v-icon>mdi-magnify</v-icon> </v-btn>
         </v-col>
-
       </v-row>
-    </v-container>
+        <v-spacer></v-spacer>
 
+        <v-scroll-x-reverse-transition>
+        <v-text-field
+          v-show="hidden"
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Search"
+          single-line
+          hide-details
+          width="100px"
+        ></v-text-field>
+        </v-scroll-x-reverse-transition>
+        
+      </v-card-title>
+      
+      <v-data-table
+        :headers="headers"
+        :items="personas"
+        :search="search"
+        :page.sync="page"
+        hide-default-footer
+        @page-count="pageCount = $event"
+        :items-per-page="14"
+        he
+      ></v-data-table>
 
-    <v-data-table
-      :headers="headers"
-      :items="personas"
-      :single-select="true"
-      item-key="id"
-      :items-per-page="20"
-  ></v-data-table>
+      <div class="text-center pt-2 mt-4">
+      <v-pagination
+        v-model="page"
+        :length="pageCount"
+      ></v-pagination>
+      </div>
+  </v-card>
 
 
 <v-row justify="center">
