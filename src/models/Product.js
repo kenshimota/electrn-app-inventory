@@ -69,8 +69,5 @@ const Product = sequelize.define("products", {
     }
 });
 
-(async () => {
-  await sequelize.sync();
-})();
 
 module.exports = Product;

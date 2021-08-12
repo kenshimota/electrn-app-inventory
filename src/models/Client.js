@@ -120,8 +120,5 @@ const Client = sequelize.define("clients", {
     },
 });
 
-(async () => {
-  await sequelize.sync();
-})();
 
 module.exports = Client;

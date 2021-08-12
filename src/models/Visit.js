@@ -55,8 +55,4 @@ const Visit = sequelize.define("visits", {
     },
 });
 
-(async () => {
-  await sequelize.sync();
-})();
-
 module.exports = Visit;

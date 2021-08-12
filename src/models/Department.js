@@ -23,8 +23,5 @@ const Department = sequelize.define("departments", {
     },
 });
 
-(async () => {
-  await sequelize.sync();
-})();
 
 module.exports = Department;

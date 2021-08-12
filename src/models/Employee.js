@@ -56,9 +56,4 @@ const Employee = sequelize.define("employees", {
     }
 });
 
-(async () => {
-  await sequelize.sync();
-  // Code here
-})();
-
 module.exports = Employee;
