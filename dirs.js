@@ -1,5 +1,5 @@
 const dirs = {
-  methods: __dirname + '/src/Routes/',
+  methods: __dirname + '/src/methods/',
   public: __dirname + '/src/public/',
 };
 
