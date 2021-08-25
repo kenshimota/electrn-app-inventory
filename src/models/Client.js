@@ -37,20 +37,12 @@ const Client = sequelize.define("clients", {
     },
     email: {
         type: DataTypes.TEXT,
-        allowNull:false,
+        allowNull:true,
         unique: true,
         validate: {
             isEmail: {
                 args: true,
                 msg: "El correo ingresado no es correcto"
-            },
-            notNull: {
-                args: true,
-                msg: "Debe ingresar El correo electronico del cliente"
-            },
-            notEmpty: {
-                args: true,
-                msg: "Debes ingresar un correo electronico valido"
             },
             isEmail: {
                 args: true,
@@ -60,35 +52,17 @@ const Client = sequelize.define("clients", {
     },
     date_birth: {
         type: DataTypes.DATE,
-        allowNull: false,
+        allowNull: true,
         validate: {
-            notEmpty: {
-                args: true,
-                msg: "La fecha de nacimiento no es valida"
-            },
             isDate: {
                 args: true,
                 msg: "La fecha de nacimiento no es valida"
-            },
-            notNull: {
-                args: true,
-                msg: "Debes ingresar la fecha de nacimiento del cliente"
             }
         }
     },
     phone: {
         type: DataTypes.TEXT,
-        allowNull: false,
-        validate: {
-            notEmpty: {
-                args: true,
-                msg: "El numero de telefono no es valido"
-            },
-            notNull: {
-                args: true,
-                msg: "Debes ingresar el numero de telefono del cliente"
-            },
-        }
+        allowNull: true
     },
     address: {
         type: DataTypes.TEXT,
@@ -104,17 +78,21 @@ const Client = sequelize.define("clients", {
             },
         }
     },
-    discovered: {
-        type: DataTypes.TEXT,
+    how_you_find_id: {
+        type: DataTypes.INTEGER,
         allowNull: false,
+        references: {
+            model: "how_you_finds",
+            key:"id"
+        },
         validate: {
             notEmpty: {
                 args: true,
-                msg: "Debes ingresar la informacion correcta"
+                msg: "Debes ingresar como el cliente se entero de la empresa"
             },
             notNull: {
                 args: true,
-                msg: "Este campo es obligatorio"
+                msg: "Debe especificar como el cliente se entro de la empresa"
             },
         }
     },
